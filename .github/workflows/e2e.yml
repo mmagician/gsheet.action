@@ -8,7 +8,7 @@ jobs:
   e2e:
     env:
       TARGET_URL: ${{ format('https://github.com/{0}/actions/runs/{1}', github.repository, github.run_id) }}
-      STATUS_URL: https://api.github.com/repos/jroehl/gsheet.action/statuses/0adf60c073a55d94d6ba0ae7a0776540a5a9d4a7
+      STATUS_URL: '{{ STATUS_URL }}'
       STATUS_CONTEXT: e2e-preview/github-actions
     runs-on: ubuntu-latest
     steps:
@@ -18,18 +18,18 @@ jobs:
           curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -X POST -d "{\"state\": \"pending\", \"description\": \"${description}\", \"context\": \"${STATUS_CONTEXT}\", \"target_url\": \"${TARGET_URL}\"}" ${STATUS_URL}
 
       - id: 'run_worksheet_tests'
-        uses: jroehl/gsheet.action@release
+        uses: '{{ USES_PREVIEW_VERSION }}'
         with:
           spreadsheetId: ${{ secrets.TEST_SPREADSHEET_ID }}
           commands: | # list of commands, specified as a valid JSON string
             [
-              { "command": "addWorksheet", "args": { "worksheetTitle": "<gsheet.action_e2e-tests>" }},
+              { "command": "addWorksheet", "args": { "worksheetTitle": "<gsheet.action_e2e-tests_${{ github.sha }}>" }},
               { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }},
               { "command": "appendData", "args": { "data": [["B1", "B2", "B3"]], "minCol": 1 }},
               { "command": "appendData", "args": { "data": [["C2", "C3", "C4"]], "minCol": 2 }},
               { "command": "getData", "args": { "minCol": 1 } },
-              { "command": "getData", "args": { "range": "<gsheet.action_e2e-tests>!A2:B3" } },
-              { "command": "removeWorksheet", "args": { "worksheetTitle": "<gsheet.action_e2e-tests>" }}
+              { "command": "getData", "args": { "range": "<gsheet.action_e2e-tests_${{ github.sha }}>!A2:B3" } },
+              { "command": "removeWorksheet", "args": { "worksheetTitle": "<gsheet.action_e2e-tests_${{ github.sha }}>" }}
             ]
         env:
           GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
@@ -61,7 +61,7 @@ jobs:
           assert ".results | length" "-eq" "7"
 
           echo_test_run 0
-          assert ".results[0].result.properties.title" "=" "<gsheet.action_e2e-tests>"
+          assert ".results[0].result.properties.title" "=" "<gsheet.action_e2e-tests_${{ github.sha }}>"
 
           echo_test_run 1
           assert ".results[1].command.kwargs[0][0][0]" "=" "A1"
