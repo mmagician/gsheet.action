@@ -1,4 +1,8 @@
+node_modules
 __tests__/runner/*
 
 .env*
 coverage
+lib
+
+.github/workflows/local-test.yml
