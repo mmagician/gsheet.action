@@ -1,9 +1,6 @@
 name: 'gsheet.action'
-description: 'This action helps in CRUD operations on a google sheet.'
-author: 'jroehl <mail@johannroehl.de>'
-branding:
-  icon: book
-  color: green
+description: 'This action helps to find the last row in a google sheet.'
+author: 'mmagician <marcin@web3.foundation>'
 inputs:
   startRow:
     description: 'Where to start looking'

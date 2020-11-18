@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jroehl/gsheet.action.git"
+    "url": "git+https://github.com/mmagician/gsheet.action.git"
   },
   "keywords": [
     "actions",
     "node",
     "setup"
   ],
-  "author": "jroehl <mail@johannroehl.de>",
+  "author": "mmagician",
   "license": "MIT",
   "husky": {
     "hooks": {
