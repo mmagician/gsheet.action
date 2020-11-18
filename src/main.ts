@@ -21,7 +21,7 @@ export default async function run(): Promise<Results> {
     });
 
     let startRow: number = Number(core.getInput('startRow', { required: true })); 
-    let worksheetName: string = core.getInput('worksheetName', { required: true }); 
+    let worksheetTitle: string = core.getInput('worksheetTitle', { required: true }); 
 
     
     while (true) {
@@ -31,7 +31,7 @@ export default async function run(): Promise<Results> {
         maxCol: 1,
         minRow: startRow,
         maxRow: startRow,
-        worksheetName: worksheetName
+        worksheetTitle: worksheetTitle
       }
       const result = await gsheet.getData(queryOptions, spreadsheetId);
 
