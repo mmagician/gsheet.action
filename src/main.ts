@@ -1,14 +1,9 @@
 import * as core from '@actions/core';
-import { validateCommands, asyncForEach, ValidatedCommand } from './lib';
 import { GoogleSheet } from 'google-sheet-cli';
 
-export interface Result {
-  command: ValidatedCommand;
-  result: any;
-}
 
 export interface Results {
-  results: Result[];
+  lastRow?: Number;
   error?: Error;
 }
 
@@ -25,22 +20,33 @@ export default async function run(): Promise<Results> {
       private_key: GSHEET_PRIVATE_KEY,
     });
 
-    const commandsString: string = core.getInput('commands', { required: true });
-    const validatedCommands = validateCommands(commandsString);
+    let startRow: number = Number(core.getInput('startRow', { required: true })); 
+    let worksheetName: string = core.getInput('worksheetName', { required: true }); 
 
-    const results: Result[] = [];
-    await asyncForEach(validatedCommands, async (command: ValidatedCommand) => {
-      const { func, kwargs } = command;
-      const result = await gsheet[func](...kwargs);
-      results.push({ command, result });
-    });
+    
+    while (true) {
+      startRow = startRow + 1;
+      const queryOptions = {
+        minCol: 1,
+        maxCol: 1,
+        minRow: startRow,
+        maxRow: startRow,
+        worksheetName: worksheetName
+      }
+      const result = await gsheet.getData(queryOptions, spreadsheetId);
 
-    core.setOutput('results', JSON.stringify({ results }));
-    core.debug(`Processed commands\n${JSON.stringify(results, null, 2)}`);
-    return { results };
+      if (!result) {
+        break;
+      }
+    }
+
+    const lastRow = startRow;
+    core.setOutput('lastRow', lastRow);
+
+    return { lastRow };
   } catch (error) {
     core.setFailed(error.message || error);
-    return { error, results: [] };
+    return { error };
   }
 }
 

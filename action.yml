@@ -5,21 +5,12 @@ branding:
   icon: book
   color: green
 inputs:
-  spreadsheetId:
-    description: 'The id of the spreadsheet to use'
-    required: true
-  commands:
-    description: |
-      'The commands and arguments to use as an array - must be a valid json string
-      e.g.
-      [
-        { "command": "addWorksheet", "args": { "worksheetTitle": "test" }},
-        { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }}
-      ]'
+  startRow:
+    description: 'Where to start looking'
     required: true
 outputs:
-  results:
-    description: 'The results of all commands as an array'
+  lastRow:
+    description: 'The last row'
 runs:
   using: 'node12'
   main: 'lib/main.js'
