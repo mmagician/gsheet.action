@@ -3,7 +3,7 @@ import { GoogleSheet } from 'google-sheet-cli';
 
 
 export interface Results {
-  lastRow?: Number;
+  startRow?: Number;
   error?: Error;
 }
 
@@ -39,23 +39,20 @@ export default async function run(): Promise<Results> {
       }
       const result = await gsheet.getData(queryOptions, spreadsheetId);
       let parsed_result = JSON.stringify({ result });
-<<<<<<< HEAD
+
       core.info(`The current row ${startRow} value is: ${parsed_result}`);
 
-      if (typeof parsed_result == 'undefined') {
-=======
-      core.info('The current row ${startRow} value is: ${parsed_result}')
-
-      if (parsed_result == "") {
->>>>>>> 7654ce0efae3c40639f36dea06b6ef15b5aac2a0
+      let rawData = result["result"]["rawData"];
+      if (rawData.length != 0) {
+        core.info(`Found data in row ${startRow}, breaking`);
         break;
       }
+
     }
 
-    const lastRow = startRow;
-    core.setOutput('lastRow', lastRow);
+    core.setOutput('lastRow', startRow);
+    return { startRow };
 
-    return { lastRow };
   } catch (error) {
     core.setFailed(error.message || error);
     return { error };
