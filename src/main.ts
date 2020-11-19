@@ -23,9 +23,13 @@ export default async function run(): Promise<Results> {
     let startRow: number = Number(core.getInput('startRow', { required: true })); 
     let worksheetTitle: string = core.getInput('worksheetTitle', { required: true }); 
 
+    let max_iterations = 25;
+    let i = 0;
     
-    while (true) {
+    while (true && i < max_iterations) {
       startRow = startRow + 1;
+      i = i + 1;
+
       const queryOptions = {
         minCol: 1,
         maxCol: 1,
@@ -34,8 +38,10 @@ export default async function run(): Promise<Results> {
         worksheetTitle: worksheetTitle
       }
       const result = await gsheet.getData(queryOptions, spreadsheetId);
+      let parsed_result = JSON.stringify({ result });
+      core.info('The current row ${startRow} value is: ${parsed_result}')
 
-      if (!result) {
+      if (parsed_result == "") {
         break;
       }
     }
