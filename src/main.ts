@@ -39,9 +39,15 @@ export default async function run(): Promise<Results> {
       }
       const result = await gsheet.getData(queryOptions, spreadsheetId);
       let parsed_result = JSON.stringify({ result });
+<<<<<<< HEAD
       core.info(`The current row ${startRow} value is: ${parsed_result}`);
 
       if (typeof parsed_result == 'undefined') {
+=======
+      core.info('The current row ${startRow} value is: ${parsed_result}')
+
+      if (parsed_result == "") {
+>>>>>>> 7654ce0efae3c40639f36dea06b6ef15b5aac2a0
         break;
       }
     }
