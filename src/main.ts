@@ -38,11 +38,11 @@ export default async function run(): Promise<Results> {
         worksheetTitle: worksheetTitle
       }
       const result = await gsheet.getData(queryOptions, spreadsheetId);
-      let parsed_result = JSON.stringify({ result });
+      let parsed_result = JSON.parse(JSON.stringify({ result }));
 
       core.info(`The current row ${startRow} value is: ${parsed_result}`);
 
-      let rawData = result["result"]["rawData"];
+      let rawData = parsed_result["result"]["rawData"];
       if (rawData.length != 0) {
         core.info(`Found data in row ${startRow}, breaking`);
         break;
