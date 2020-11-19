@@ -25,6 +25,7 @@ export default async function run(): Promise<Results> {
 
     let max_iterations = 25;
     let i = 0;
+    let rawData = [];
     
     while (true && i < max_iterations) {
       startRow = startRow + 1;
@@ -40,14 +41,18 @@ export default async function run(): Promise<Results> {
       const result = await gsheet.getData(queryOptions, spreadsheetId);
       let parsed_result = JSON.parse(JSON.stringify({ result }));
 
-      core.info(`The current row ${startRow} value is: ${parsed_result}`);
+      core.info(`Checking row ${startRow}`);
 
-      let rawData = parsed_result["result"]["rawData"];
-      if (rawData.length != 0) {
-        core.info(`Found data in row ${startRow}, breaking`);
+      rawData = parsed_result["result"]["rawData"];
+      if (rawData.length == 0) {
+        core.info(`Found no data in row ${startRow}, breaking`);
         break;
       }
+    }
 
+    if (rawData.length != 0) {
+      // still not found an empty cell, break with error
+      throw new Error(`Empty cell not found until line ${startRow}`);
     }
 
     core.setOutput('lastRow', startRow);
