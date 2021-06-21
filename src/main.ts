@@ -23,7 +23,7 @@ export default async function run(): Promise<Results> {
     let startRow: number = Number(core.getInput('startRow', { required: true })); 
     let worksheetTitle: string = core.getInput('worksheetTitle', { required: true }); 
 
-    let max_iterations = 25;
+    let max_iterations = 2500;
     let i = 0;
     let rawData = [];
     
